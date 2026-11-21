@@ -1,0 +1,180 @@
+{
+  "deck": { "id": "2026-11-21", "title": "11 月 21 日的信仰牌组" },
+  "events": [
+    { "key": "vix", "sort": 1, "happens_at": null, "short_label": "持续", "when_label": "持续追踪", "name": "VIX 回落到 25 以下" },
+    { "key": "spx50", "sort": 2, "happens_at": null, "short_label": "持续", "when_label": "持续追踪", "name": "标普 500 收复 50 日均线" },
+    { "key": "btc62", "sort": 3, "happens_at": null, "short_label": "持续", "when_label": "持续追踪", "name": "比特币守住约 6.2 万美元的幂律支撑线" },
+    { "key": "fomc", "sort": 10, "happens_at": "2026-12-10T03:00:00+08:00", "short_label": "12.10", "when_label": "12 月 10 日 周四 03:00", "name": "美联储 12 月议息决议" },
+    { "key": "cpi", "sort": 11, "happens_at": "2026-12-10T21:30:00+08:00", "short_label": "12.10", "when_label": "12 月 10 日 周四 21:30", "name": "美国 11 月 CPI" },
+    { "key": "pce", "sort": 12, "happens_at": "2026-12-23T21:30:00+08:00", "short_label": "12.23", "when_label": "12 月 23 日 周三 21:30", "name": "美国 11 月 PCE" },
+    { "key": "q4", "sort": 13, "happens_at": "2027-01-15T00:00:00+08:00", "short_label": "27.01", "when_label": "2027 年 1 月中旬起", "name": "Q4 财报季" },
+    { "key": "q1", "sort": 14, "happens_at": "2027-04-25T00:00:00+08:00", "short_label": "27.04", "when_label": "2027 年 4 月下旬", "name": "科技巨头 Q1 财报" },
+    { "key": "may27", "sort": 15, "happens_at": "2027-05-20T00:00:00+08:00", "short_label": "27.05", "when_label": "2027 年 5 月", "name": "半年后回看科技股" },
+    { "key": "mid27", "sort": 16, "happens_at": "2027-07-01T00:00:00+08:00", "short_label": "27.07", "when_label": "2027 年年中", "name": "回看 2027 上半年经济数据" }
+  ],
+  "cards": [
+    {
+      "id": "1121-vix", "kind": "faith", "tag": "情绪", "charge": 10, "event_keys": ["vix"],
+      "title": "恐慌指数冲进了 1990 年以来的前 5%",
+      "rows": [
+        ["要点", "VIX 周五收在 35 以上，是 2025 年 4 月以来最高；这一周涨了 86%，是有记录以来第 4 大的单周涨幅。他的统计是：VIX 处在最高区间之后，股市往后的回报高于平均。"],
+        ["历史对照", "上一次是 2025 年 4 月关税恐慌，VIX 一度冲上 50 以上，标普 500 两个多月后就重新创了新高。"]
+      ],
+      "void_if": "他自己也说这不是每次都成立。如果 VIX 长期停在 30 以上，同时信用利差扩大，更可能是熊市而不是回调。",
+      "ok_if": "12 月内 VIX 回落到 25 以下，并且没有再创新高。",
+      "source": { "name": "Charlie Bilello", "handle": "charliebilello", "via": false, "stance": "数据派，长期持有", "date": "11月20日", "url": "https://x.com/charliebilello/status/2123925064915513595" }
+    },
+    {
+      "id": "1121-sigma", "kind": "faith", "tag": "超卖", "charge": 10, "event_keys": ["spx50"],
+      "title": "这种程度的超卖，1950 年以来只出现过 3 次",
+      "rows": [
+        ["要点", "标普 500 跌到 50 日均线下方 4.1 个标准差。1950 年以来，只有 1987、2011、2015 年出现过。过去 5 天跌了 5.5%，是 2025 年 4 月 8 日以来最差的 5 天。"],
+        ["历史对照", "从那三次超卖算起，标普大约分别用了 21 个月、7 个月、11 个月回到前高。另据 Charlie Bilello，1928 年以来标普平均每年都有一次约 16% 的年内回撤，长期年化回报仍在 10% 左右。"]
+      ],
+      "void_if": "跌破近期低点后继续放量下跌。1987 年那次，前高要等将近两年才回来。",
+      "ok_if": "未来几周内标普 500 收复 50 日均线。",
+      "source": { "name": "Ryan Detrick", "handle": "RyanDetrick", "via": false, "stance": "机构首席市场策略师", "date": "11月20日", "url": "https://x.com/RyanDetrick/status/2123909057035804975" }
+    },
+    {
+      "id": "1121-mine", "kind": "sober", "tag": "见底", "charge": 0, "event_keys": [],
+      "title": "超卖不等于见底",
+      "rows": [
+        ["要点", "科技板块在截至 11 月 5 日的 21 个交易日里落后标普 11.8%，是 2001 年以来最差的相对表现。他翻了历史上的类似情形：之后更常见的是继续剧烈波动，而不是马上走出底部。"],
+        ["看清立场", "他还持有 10 月 15 日建立的标普空单。看空的人说看空也要打折扣，但这组统计值得记住。"]
+      ],
+      "source": { "name": "Mark Minervini", "handle": "markminervini", "via": false, "stance": "持有标普空单", "date": "11月13日", "url": "https://x.com/markminervini/status/2121251695426449746" }
+    },
+    {
+      "id": "1121-eps", "kind": "faith", "tag": "盈利", "charge": 12, "event_keys": ["q4"],
+      "title": "恐惧最大的时候，盈利增长最强",
+      "rows": [
+        ["要点", "标普 500 第三季度 EPS 同比增长 31.9%，是至少 4 年来最高；实际盈利已经连续 13 个季度超出预期。"],
+        ["历史对照", "2022 年的下跌伴随盈利预期下修，用了约 2 年回到前高；2025 年 4 月的下跌没有伴随盈利下修，不到 3 个月就收复了。"]
+      ],
+      "void_if": "Q4 财报季里多家公司下调 2027 年指引。富达的 Jurrien Timmer 已经提醒，盈利增速可能正在见顶。",
+      "ok_if": "Q4 财报继续大面积超预期，2027 年盈利预期没有被下修。",
+      "source": { "name": "The Kobeissi Letter", "handle": "KobeissiLetter", "via": false, "stance": "长期看多 AI，卖付费订阅", "date": "11月20日", "url": "https://x.com/KobeissiLetter" }
+    },
+    {
+      "id": "1121-ms", "kind": "faith", "tag": "机构", "charge": 10, "event_keys": ["q4"],
+      "title": "大摩把全球股票调到了“最大超配”",
+      "rows": [
+        ["要点", "据转述，摩根士丹利告诉客户：少拿现金，减配大宗商品和债券；全球股票远期市盈率约 15 倍，是 2023 年以来最便宜；AI 资本开支周期没有断，能撑住 2027 年的企业盈利。"],
+        ["注意", "这是推特上的二手转述，原报告没有公开。"]
+      ],
+      "void_if": "2027 年盈利预期被大幅下修，或者科技巨头削减 AI 资本开支指引。",
+      "ok_if": "Q4 财报季确认 2027 年资本开支计划不变。",
+      "source": { "name": "摩根士丹利", "handle": "aleabitoreddit", "via": true, "stance": "卖方研报，二手转述", "date": "11月16日", "url": "https://x.com/aleabitoreddit/status/2122268155682996328" }
+    },
+    {
+      "id": "1121-burry", "kind": "sober", "tag": "个股", "charge": 0, "event_keys": [],
+      "title": "这一次，AI 泡沫论者确实说对了一部分",
+      "rows": [
+        ["要点", "截至 11 月 18 日，一批 AI 概念股从高点跌了 60% 到 80%：甲骨文约 −65%，CoreWeave 约 −74%，IREN 约 −80%。同期标普 500 只跌了约 6%。"],
+        ["这意味着", "指数跌得不多，不代表你拿的票也是。看自己的持仓，别只看指数。"]
+      ],
+      "source": { "name": "Burry Tracker", "handle": "burrytracker", "via": false, "stance": "追踪 Michael Burry 观点", "date": "11月18日", "url": "https://x.com/burrytracker/status/2123077120813342724" }
+    },
+    {
+      "id": "1121-script", "kind": "faith", "tag": "AI 逻辑", "charge": 6, "event_keys": ["q1"],
+      "title": "这轮下跌，和 AI 空头预测了两年的剧本不一样",
+      "rows": [
+        ["要点", "AI 空头的理由一直是 GPU 折旧、资本开支跑在收入前面、便宜模型压低算力需求。真正把市场砸下来的却是外部冲击：中期选举、龙头公司管理层突变、美联储 2023 年以来首次加息。"],
+        ["这意味着", "如果跌的原因不在 AI 本身，AI 的需求逻辑就还没有被证伪。"]
+      ],
+      "void_if": "接下来的财报出现 AI 需求放缓、订单被砍，空头原来的剧本就开始兑现了。",
+      "ok_if": "科技巨头 Q1 财报里 AI 收入继续加速。",
+      "source": { "name": "Shay Boloor", "handle": "StockSavvyShay", "via": false, "stance": "长期看多 AI 的个人投资者", "date": "11月18日", "url": "https://x.com/StockSavvyShay/status/2123082538830991795" }
+    },
+    {
+      "id": "1121-druck", "kind": "faith", "tag": "大佬", "charge": 6, "event_keys": ["mid27"],
+      "title": "最没把握的大佬，也不敢做空",
+      "rows": [
+        ["要点", "Stanley Druckenmiller 说，这是他记忆里对未来 12 个月最没把握的时候，现在处于保本模式，既不做多也不做空。但他也说创新太多，不敢做空；科技股已经超卖、被洗干净了，他手里有一些小仓位。"]
+      ],
+      "void_if": "他同时提醒，2027 年下半年的经济可能令人失望。",
+      "ok_if": "2027 年上半年的经济数据没有明显走弱。",
+      "source": { "name": "Stanley Druckenmiller", "handle": "wallstengine", "via": true, "stance": "宏观对冲基金经理，二手转述", "date": "11月17日", "url": "https://x.com/wallstengine/status/2122767953628402116" }
+    },
+    {
+      "id": "1121-minutes", "kind": "sober", "tag": "利率", "charge": 0, "event_keys": ["fomc", "cpi"],
+      "title": "美联储纪要：几乎所有官员都觉得还要再加",
+      "rows": [
+        ["要点", "10 月会议纪要显示，几乎所有官员认为进一步加息可能是合适的；有几位提出，如果通胀数据不好，下次可以加得比 25 个基点更多；不少官员把 AI 基建列为重要的通胀风险。"],
+        ["这意味着", "12 月 10 日凌晨的议息决议和当晚的 11 月 CPI，是这一轮信仰最重要的两个验证点。"]
+      ],
+      "source": { "name": "Amit", "handle": "amitisinvesting", "via": false, "stance": "财经博主", "date": "11月18日", "url": "https://x.com/amitisinvesting/status/2123130787767955748" }
+    },
+    {
+      "id": "1121-pivot", "kind": "faith", "tag": "利率", "charge": 12, "event_keys": ["fomc", "cpi"],
+      "title": "再过两周左右，美联储可能换口风",
+      "rows": [
+        ["要点", "宏观交易员 Dario 两周前就预警过，接下来一个月会很难熬。他现在认为，股市还要大约两周才能企稳，时间点会和美联储把重心从抗通胀转向金融稳定重合。"],
+        ["历史对照", "2018 年底暴跌之后，美联储在 2019 年 1 月转向“耐心”，标普 500 当年涨了近 29%。"]
+      ],
+      "void_if": "12 月会议继续强硬加息，不提金融稳定。他自己举过反例：2000 年 4 月 VIX 在 33 附近时，美联储 5 月仍加息 50 个基点，之后 10 天纳指跌了约 14%。",
+      "ok_if": "12 月会议的声明或发布会开始强调金融稳定，或者暗示暂停加息。",
+      "source": { "name": "Dario Perkins", "handle": "DarioCpx", "via": false, "stance": "宏观交易员，近期看空", "date": "11月21日", "url": "https://x.com/DarioCpx/status/2123956310240563573" }
+    },
+    {
+      "id": "1121-pce67", "kind": "sober", "tag": "通胀", "charge": 0, "event_keys": ["pce"],
+      "title": "核心 PCE 已经连续 67 个月高于 2%",
+      "rows": [
+        ["要点", "美联储最看重的通胀指标核心 PCE，已经连续 67 个月高于 2% 的目标，而且已经连着上升了一年半。美联储理事 Waller 公开说，人们开始觉得 3% 的通胀可能是常态。"],
+        ["这意味着", "12 月 23 日公布 11 月 PCE。如果继续往上走，“加息快结束了”这条信仰就要打折。"]
+      ],
+      "source": { "name": "Jim Bianco", "handle": "biancoresearch", "via": false, "stance": "宏观研究机构", "date": "11月18日", "url": "https://x.com/biancoresearch/status/2123051396823953682" }
+    },
+    {
+      "id": "1121-power", "kind": "faith", "tag": "比特币", "charge": 10, "event_keys": ["btc62"],
+      "title": "比特币正踩在幂律支撑线上",
+      "rows": [
+        ["要点", "富达的 Jurrien Timmer 说，基于四年周期和幂律模型，他仍然看多比特币。现在价格又回到了这条支撑线附近，这条线大约在 6.2 万美元，而且还在逐步抬高。"],
+        ["他也承认", "最近比特币和标普 500 的相关性明显变高，走势更像投机资产，而不是货币资产。"]
+      ],
+      "void_if": "他自己划的线：如果比特币明显跌破这条支撑线，他的整个框架都要打问号。",
+      "ok_if": "比特币守住 6.2 万美元附近的支撑线，并重新走高。",
+      "source": { "name": "Jurrien Timmer", "handle": "TimmerFidelity", "via": false, "stance": "富达全球宏观主管", "date": "11月21日", "url": "https://x.com/TimmerFidelity/status/2123946495997333593" }
+    },
+    {
+      "id": "1121-longest", "kind": "faith", "tag": "比特币", "charge": 8, "event_keys": ["btc62"],
+      "title": "比特币追平了史上最长的一次下跌",
+      "rows": [
+        ["要点", "比特币已经从 2025 年 10 月的高点下跌 54%，是 2022 年以来最大的回调；从高点到现在已经 410 天，追平了 2013 年 11 月到 2015 年 1 月的最长纪录。"],
+        ["历史对照", "上一次最长下跌结束后，比特币在 2017 年迎来了一轮大牛市。2018 年跌约 84%、2022 年跌约 77%，之后都在 2 到 3 年内回到了前高。"]
+      ],
+      "void_if": "老牌交易员 Peter Brandt 提醒，历史上每轮比特币牛市结束后，都至少回吐了前一轮抛物线涨幅的 75%。按这个规律，这次可能还没跌完。",
+      "ok_if": "下跌时长不再刷新纪录，价格开始抬高低点。",
+      "source": { "name": "Charlie Bilello", "handle": "charliebilello", "via": false, "stance": "数据派，长期持有", "date": "11月20日", "url": "https://x.com/charliebilello/status/2123891809176940650" }
+    },
+    {
+      "id": "1121-yu", "kind": "sober", "tag": "阴跌", "charge": 0, "event_keys": [],
+      "title": "最痛的不是暴跌，是没有利空还在阴跌",
+      "rows": [
+        ["要点", "鱼哥认为，暴跌的时候有人抄底、有反弹，痛感反而不强。真正难熬的是：油价下来了股价不涨，2 年期美债收益率又逼近新高，美元创 2 年新高，黄金和比特币创新低。这说明市场在重新定价加息，而不是在消化某一个利空。"],
+        ["看清立场", "他的结论是现在不要接飞刀。他做的是短线交易，和长期持有是两套逻辑。"]
+      ],
+      "source": { "name": "鱼哥", "handle": "iiiinvest", "via": false, "stance": "中文交易博主，带单", "date": "11月13日", "url": "https://x.com/iiiinvest/status/2121122829282525582" }
+    },
+    {
+      "id": "1121-tj", "kind": "faith", "tag": "持有", "charge": 6, "event_keys": ["may27"],
+      "title": "可以不买，但别在恐慌里交出筹码",
+      "rows": [
+        ["要点", "TJ 认为科技股从没这么便宜过。如果你手里是指数和大科技，别把筹码交出去。他说自己做内容以来，没见过一个人能在熊市满仓做空、又在低位及时满仓做多。"],
+        ["他给的期限", "半年。他的判断是，半年后市场可能已经不记得今天的下跌。"]
+      ],
+      "void_if": "到 2027 年 5 月，科技股仍然低于今天的位置，而且盈利预期被下修。",
+      "ok_if": "2027 年 5 月回看，科技指数高于今天。",
+      "source": { "name": "TJ", "handle": "TJ_Research", "via": false, "stance": "中文美股博主，长期持有", "date": "11月20日", "url": "https://x.com/TJ_Research/status/2123899306843230516" }
+    },
+    {
+      "id": "1121-cash", "kind": "sober", "tag": "仓位", "charge": 0, "event_keys": [],
+      "title": "拿不拿得住，先看你有没有现金流",
+      "rows": [
+        ["要点", "一位中文博主算了笔账：100 万本金只买 10 万，一直不涨你拿得住；全仓 100 万，一直不涨你就拿不住；如果每个月还有几万块现金流进账，就不怕。没有外部现金流的人，最容易因为生活开支被迫卖出，或者为了回本去加杠杆。"],
+        ["这意味着", "充值信仰之前，先确认自己没用杠杆，也没动短期要花的钱。"]
+      ],
+      "source": { "name": "WallStreet0Name", "handle": "WallStreet0Name", "via": false, "stance": "中文博主，也发交易喊单", "date": "11月20日", "url": "https://x.com/WallStreet0Name/status/2123684044974272722" }
+    }
+  ]
+}
