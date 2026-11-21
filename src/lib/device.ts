@@ -8,6 +8,8 @@ export interface Progress {
   index: number
   balance: number
   picks: Record<string, 1 | -1>
+  hand?: string[]
+  seen?: string[]
 }
 
 function uuid(): string {

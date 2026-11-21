@@ -1,0 +1,35 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { isSoundOn, setSoundOn } from './fx/sound'
+
+export default function SoundToggle() {
+  const [on, setOn] = useState(false)
+  useEffect(() => setOn(isSoundOn()), [])
+  return (
+    <button
+      type="button"
+      className={`sound${on ? ' on' : ''}`}
+      aria-pressed={on}
+      aria-label={on ? '关闭音效' : '打开音效'}
+      title={on ? '关闭音效' : '打开音效'}
+      onClick={() => {
+        setSoundOn(!on)
+        setOn(!on)
+      }}
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none" />
+        {on ? (
+          <>
+            <path d="M15.5 9a4 4 0 0 1 0 6" />
+            <path d="M18 6.5a7.5 7.5 0 0 1 0 11" />
+          </>
+        ) : (
+          <path d="M16 9.5l5 5M21 9.5l-5 5" />
+        )}
+      </svg>
+      <span>{on ? '音效开' : '音效关'}</span>
+    </button>
+  )
+}

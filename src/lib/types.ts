@@ -52,4 +52,5 @@ export interface DeckBundle {
   cards: Card[]
   events: VerifyEvent[]
   stats: Record<string, CardStat>
+  orders: number
 }

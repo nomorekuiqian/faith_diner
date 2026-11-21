@@ -18,6 +18,13 @@ export default function CalendarList({ deckId, cards, events, stats }: Props) {
 
   const dated = events.filter((e) => e.happens_at)
   const ongoing = events.filter((e) => !e.happens_at)
+  const nextAt =
+    now === null
+      ? null
+      : dated
+          .map((e) => Date.parse(e.happens_at!))
+          .filter((t) => t > now)
+          .sort((a, b) => a - b)[0] ?? null
 
   const item = (e: VerifyEvent) => {
     const linked = cards.filter((c) => c.event_keys.includes(e.key))
@@ -29,8 +36,10 @@ export default function CalendarList({ deckId, cards, events, stats }: Props) {
       const d = Math.ceil((Date.parse(e.happens_at) - now) / 86400000)
       countdown = d > 0 ? `还有 ${d} 天` : '已到期，待结算'
     }
+    const isNext = nextAt !== null && e.happens_at !== null && Date.parse(e.happens_at) === nextAt
     return (
-      <li key={e.key}>
+      <li key={e.key} className={isNext ? 'is-next' : undefined}>
+        <span className="node" aria-hidden="true" />
         <div className={`dt${e.happens_at ? '' : ' ongo'}`}>
           {e.happens_at ? e.short_label : '持续'}
           <small>{e.happens_at ? e.when_label : '没有固定日期'}</small>

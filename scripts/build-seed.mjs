@@ -14,7 +14,7 @@ const j = (v) => `${q(JSON.stringify(v))}::jsonb`
 const arr = (a) => `ARRAY[${a.map(q).join(',')}]::text[]`
 
 const out = []
-out.push('BEGIN;')
+
 out.push(
   `INSERT INTO public.decks (id, title) VALUES (${q(deck.id)}, ${q(deck.title)})
    ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;`
@@ -27,6 +27,7 @@ for (const e of events) {
        short_label = EXCLUDED.short_label, happens_at = EXCLUDED.happens_at, sort = EXCLUDED.sort;`
   )
 }
+out.push(`UPDATE public.cards SET position = position + 1000 WHERE deck_id = ${q(deck.id)};`)
 cards.forEach((c, i) => {
   out.push(
     `INSERT INTO public.cards (id, deck_id, position, kind, tag, title, rows, void_if, ok_if, charge, event_keys, source)
@@ -37,5 +38,5 @@ cards.forEach((c, i) => {
        charge = EXCLUDED.charge, event_keys = EXCLUDED.event_keys, source = EXCLUDED.source;`
   )
 })
-out.push('COMMIT;')
+
 process.stdout.write(out.join('\n') + '\n')

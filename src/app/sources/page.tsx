@@ -2,7 +2,7 @@ import { getLatestDeck } from '@/lib/data'
 import type { Card } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
-export const metadata = { title: '来源 · 信仰充值站' }
+export const metadata = { title: '食材来源 · 美股信仰食堂' }
 
 export default async function SourcesPage() {
   const { cards } = await getLatestDeck()
@@ -12,17 +12,16 @@ export default async function SourcesPage() {
 
   return (
     <section className="page">
-      <h1>这副牌从哪来</h1>
+      <h1>这些食材从哪来</h1>
       <p className="lede">
-        今天这 {cards.length} 张卡来自 {groups.size} 个来源：{faith} 张信仰卡，{cards.length - faith} 张清醒卡。
+        当前卡池共 {cards.length} 道菜（{faith} 道信仰菜，{cards.length - faith} 道清醒避坑），来自 {groups.size} 个数据与观点来源。
       </p>
-      <h2>怎么挑的</h2>
+      <h2>怎么备菜的</h2>
       <ol className="rules">
-        <li>从 MarketBrew 已抓取的推文里取最近 10 天的原创帖，不含回复。</li>
-        <li>按关键词筛出和这轮下跌有关的内容：恐慌指数、历史回报、超卖、加息、通胀、比特币、抄底、熊市等，再按点赞数排序。</li>
-        <li>保留有具体数据或明确判断的帖子，看多做成信仰卡，看空或提醒风险做成清醒卡。</li>
-        <li>不收：直接给买卖点位的喊单帖、涉及个人私生活的新闻、只有情绪没有论据的帖子。</li>
-        <li>原文改写成中文摘要，附原推链接。推文里的数字都没有经过独立核实。</li>
+        <li>一手宏观与财报数据：通过 Financial Modeling Prep（FMP）直接拉取美国 GDP、就业、零售、CPI、美债收益率、原油与核心科技股最新财报。</li>
+        <li>经典常青历史库：美股百年回撤与长期胜率、比特币周期规律、巴菲特 / 彼得·林奇 / 霍华德·马克斯等经得起周期检验的原则。</li>
+        <li>市场观点精选：从 MarketBrew 推文库筛出带具体数据或明确逻辑的看多观点与风险提醒，剔除纯情绪喊单帖。</li>
+        <li>所有卡片均附原始出处与作废/兑现条件，方便到期回头验菜。</li>
       </ol>
       <h2>来源列表</h2>
       <ul className="src-list">
@@ -40,7 +39,7 @@ export default async function SourcesPage() {
                 <div>
                   {list.map((card) => (
                     <a key={card.id} href={card.source.url} target="_blank" rel="noopener noreferrer">
-                      {card.kind === 'faith' ? '信仰卡' : '清醒卡'}：{card.tag}
+                      {card.tag}
                     </a>
                   ))}
                 </div>
