@@ -30,10 +30,11 @@ for (const e of events) {
 out.push(`UPDATE public.cards SET position = position + 1000 WHERE deck_id = ${q(deck.id)};`)
 cards.forEach((c, i) => {
   out.push(
-    `INSERT INTO public.cards (id, deck_id, position, kind, tag, title, rows, void_if, ok_if, charge, event_keys, source)
-     VALUES (${q(c.id)}, ${q(deck.id)}, ${i + 1}, ${q(c.kind)}, ${q(c.tag)}, ${q(c.title)}, ${j(c.rows)},
+    `INSERT INTO public.cards (id, deck_id, position, kind, tag, dish, title, rows, void_if, ok_if, charge, event_keys, source)
+     VALUES (${q(c.id)}, ${q(deck.id)}, ${i + 1}, ${q(c.kind)}, ${q(c.tag)}, ${q(c.dish)}, ${q(c.title)}, ${j(c.rows)},
        ${q(c.void_if)}, ${q(c.ok_if)}, ${c.charge || 0}, ${arr(c.event_keys || [])}, ${j(c.source)})
      ON CONFLICT (id) DO UPDATE SET position = EXCLUDED.position, kind = EXCLUDED.kind, tag = EXCLUDED.tag,
+       dish = coalesce(EXCLUDED.dish, public.cards.dish),
        title = EXCLUDED.title, rows = EXCLUDED.rows, void_if = EXCLUDED.void_if, ok_if = EXCLUDED.ok_if,
        charge = EXCLUDED.charge, event_keys = EXCLUDED.event_keys, source = EXCLUDED.source;`
   )

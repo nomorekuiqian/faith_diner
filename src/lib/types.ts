@@ -15,6 +15,7 @@ export interface Card {
   position: number
   kind: CardKind
   tag: string
+  dish: string | null
   title: string
   rows: [string, string][]
   void_if: string | null

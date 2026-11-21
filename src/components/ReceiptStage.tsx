@@ -97,9 +97,9 @@ export default function ReceiptStage({ order, dishes, sides, events, deckTitle, 
     >
       <div className="rs-head">
         <div>
-          <h2>{printed ? '小票打好了' : '正在出票'}</h2>
+          <h2>{printed ? '立场凭证已打好' : '正在出票'}</h2>
           <p>
-            单号 <b>{order.order_no}</b>，今日第 {order.daily_seq} 单，桌号 {table}
+            单号 <b>{order.order_no}</b> · 保存到本地，过段时间拿出来核对验真还是验伪
           </p>
         </div>
         <button type="button" className="rs-close" onClick={onClose} aria-label="关闭小票">
@@ -137,16 +137,16 @@ export default function ReceiptStage({ order, dishes, sides, events, deckTitle, 
             transition={{ type: 'spring', stiffness: 220, damping: 20 }}
           >
             <button type="button" className="btn main" onClick={() => save('png')} disabled={!canvas || busy !== null}>
-              {busy === 'png' ? '正在保存…' : '保存图片'}
-            </button>
-            <button type="button" className="btn" onClick={() => save('pdf')} disabled={!canvas || busy !== null}>
-              {busy === 'pdf' ? '正在生成…' : '保存 PDF'}
+              {busy === 'png' ? '正在保存…' : '保存小票到本地'}
             </button>
             <button type="button" className="btn" onClick={() => setFlat(true)} disabled={!img}>
               看小票原图
             </button>
+            <button type="button" className="btn" onClick={() => save('pdf')} disabled={!canvas || busy !== null}>
+              {busy === 'pdf' ? '正在生成…' : '保存 PDF'}
+            </button>
             <Link className="btn" href="/calendar">
-              看取餐时间
+              看未来事件
             </Link>
             <button type="button" className="btn ghost" onClick={onClose}>
               再点一单

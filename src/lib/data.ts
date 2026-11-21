@@ -2,11 +2,18 @@ import { insforge } from './insforge'
 import type { Card, CardStat, Deck, DeckBundle, VerifyEvent } from './types'
 
 const CARD_COLUMNS =
-  'id, deck_id, position, kind, tag, title, rows, void_if, ok_if, charge, event_keys, source, verify_status, outcome'
+  'id, deck_id, position, kind, tag, dish, title, rows, void_if, ok_if, charge, event_keys, source, verify_status, outcome'
 
 const CACHE_TTL_MS = 30_000
-let cached: { at: number; data: DeckBundle } | null = null
-let inflight: Promise<DeckBundle> | null = null
+
+type DeckCacheStore = {
+  cached: { at: number; data: DeckBundle } | null
+  inflight: Promise<DeckBundle> | null
+}
+
+// 挂在 globalThis 上，确保不同路由 chunk 和开发热更新之间共享同一份热缓存
+const g = globalThis as typeof globalThis & { __faithDeckCache?: DeckCacheStore }
+const store: DeckCacheStore = (g.__faithDeckCache ??= { cached: null, inflight: null })
 
 function fail(what: string, error: unknown): never {
   const msg = error && typeof error === 'object' && 'message' in error ? String((error as { message: unknown }).message) : String(error)
@@ -24,9 +31,9 @@ async function fetchLatestDeck(): Promise<DeckBundle> {
   if (!deck) throw new Error('数据库里还没有牌组，请先运行 npm run seed')
 
   const [cardsRes, eventsRes, statsRes, ordersRes] = await Promise.all([
-    insforge.database.from('cards').select(CARD_COLUMNS).eq('deck_id', deck.id).order('position', { ascending: true }).limit(200),
+    insforge.database.from('cards').select(CARD_COLUMNS).eq('deck_id', deck.id).order('position', { ascending: true }).limit(300),
     insforge.database.from('verify_events').select('key, name, when_label, short_label, happens_at, sort, status').order('sort', { ascending: true }).limit(100),
-    insforge.database.from('card_stats').select('card_id, charges, doubts').eq('deck_id', deck.id).limit(200),
+    insforge.database.from('card_stats').select('card_id, charges, doubts').eq('deck_id', deck.id).limit(300),
     insforge.database.from('deck_order_stats').select('deck_id, orders').eq('deck_id', deck.id).limit(1)
   ])
   if (cardsRes.error) fail('卡片', cardsRes.error)
@@ -47,21 +54,28 @@ async function fetchLatestDeck(): Promise<DeckBundle> {
   }
 }
 
-// 取最新一副牌（30 秒内存缓存 + 并发去重，切换导航秒开）
-export async function getLatestDeck(): Promise<DeckBundle> {
-  const now = Date.now()
-  if (cached && now - cached.at < CACHE_TTL_MS) {
-    return cached.data
-  }
-  if (!inflight) {
-    inflight = fetchLatestDeck()
+function refreshLatestDeck(): Promise<DeckBundle> {
+  if (!store.inflight) {
+    store.inflight = fetchLatestDeck()
       .then((data) => {
-        cached = { at: Date.now(), data }
+        store.cached = { at: Date.now(), data }
         return data
       })
       .finally(() => {
-        inflight = null
+        store.inflight = null
       })
   }
-  return inflight
+  return store.inflight
+}
+
+// 取最新一副牌（30 秒 SWR 缓存：有缓存立即返回，过期后后台静默刷新，避免切 tab 时等远程库）
+export async function getLatestDeck(): Promise<DeckBundle> {
+  const now = Date.now()
+  if (store.cached) {
+    if (now - store.cached.at >= CACHE_TTL_MS) {
+      void refreshLatestDeck().catch(() => {})
+    }
+    return store.cached.data
+  }
+  return refreshLatestDeck()
 }

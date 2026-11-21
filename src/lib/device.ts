@@ -54,3 +54,10 @@ export function saveProgress(deckId: string, p: Progress) {
 }
 
 export const PROGRESS_EVENT = 'faith-recharge:progress'
+
+// 每台设备固定一个桌号，A01 到 A28
+export function tableFor(device: string) {
+  let h = 0
+  for (const ch of device) h = (h * 31 + ch.charCodeAt(0)) >>> 0
+  return `A${String((h % 28) + 1).padStart(2, '0')}`
+}

@@ -2,6 +2,7 @@
 
 import { animate, motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { keyDataOf, logicOf, watchOf } from '@/lib/dish'
 import type { Card, CardStat } from '@/lib/types'
 
 export interface HoloHandle {
@@ -131,14 +132,20 @@ const HoloCard = forwardRef<HoloHandle, Props>(function HoloCard(
             <h3 className="c-title">{card.title}</h3>
             <div className="c-body">
               <dl className="front">
-                {card.rows
-                  .filter(([label]) => label !== '详情')
-                  .map(([label, text], i) => (
-                    <div key={`${label}-${i}`}>
-                      {label && <dt>{label}</dt>}
-                      <dd className={label ? undefined : 'plain'}>{text}</dd>
-                    </div>
-                  ))}
+                {logicOf(card) ? (
+                  <div>
+                    <dd className="plain">{logicOf(card)}</dd>
+                  </div>
+                ) : (
+                  card.rows
+                    .filter(([label]) => label !== '详情' && label !== '关键数据' && label !== '关注什么')
+                    .map(([label, text], i) => (
+                      <div key={`${label}-${i}`}>
+                        {label && <dt>{label}</dt>}
+                        <dd className={label ? undefined : 'plain'}>{text}</dd>
+                      </div>
+                    ))
+                )}
               </dl>
             </div>
             {faith && (
@@ -182,33 +189,31 @@ const HoloCard = forwardRef<HoloHandle, Props>(function HoloCard(
         </div>
 
         {/* 背面 */}
-        {(faith || card.rows.some(([label]) => label === '详情')) && (
+        {(keyDataOf(card) || logicOf(card) || watchOf(card)) && (
           <div className="side back-side">
             <div className="b-head">
-              <span className="tag">配料表</span>
-              <span className="chk">{faith ? '原数据与验证口径，上架即锁定' : '看清风险与立场'}</span>
+              <span className="tag">观点拆解</span>
+              <span className="chk">{faith ? '数据、逻辑与关注点' : '看清风险与关注点'}</span>
             </div>
             <h3 className="c-title">{card.title}</h3>
             <dl className="back">
-              {card.rows
-                .filter(([label]) => label === '详情')
-                .map(([, text], i) => (
-                  <div key={`detail-${i}`}>
-                    <dt>详细背景</dt>
-                    <dd>{text}</dd>
-                  </div>
-                ))}
-              {card.void_if && (
-                <>
-                  <dt className="v">作废条件</dt>
-                  <dd>{card.void_if}</dd>
-                </>
+              {keyDataOf(card) && (
+                <div>
+                  <dt>关键数据</dt>
+                  <dd style={{ whiteSpace: 'pre-line' }}>{keyDataOf(card)}</dd>
+                </div>
               )}
-              {card.ok_if && (
-                <>
-                  <dt className="k">兑现条件</dt>
-                  <dd>{card.ok_if}</dd>
-                </>
+              {logicOf(card) && (
+                <div>
+                  <dt>逻辑链条</dt>
+                  <dd>{logicOf(card)}</dd>
+                </div>
+              )}
+              {watchOf(card) && (
+                <div>
+                  <dt className="k">接下来关注什么</dt>
+                  <dd style={{ whiteSpace: 'pre-line' }}>{watchOf(card)}</dd>
+                </div>
               )}
             </dl>
             {faith && evText && (

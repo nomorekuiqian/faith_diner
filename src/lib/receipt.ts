@@ -1,5 +1,6 @@
 'use client'
 
+import { topicOf } from './dish'
 import type { Card, VerifyEvent } from './types'
 
 export interface OrderResult {
@@ -20,12 +21,12 @@ export interface ReceiptInput {
   table: string
 }
 
-// 80mm 热敏小票是 576 个点宽，这里按这个宽度排版，再按 scale 放大输出
+// 80mm 热敏小票宽度 576pt，精简排版成一份清晰可留存的立场凭证
 const W = 576
-const PAD = 34
-const INK = '#211c15'
-const SOFT = '#6e6558'
-const PAPER = '#fbf8f0'
+const PAD = 38
+const INK = '#1d1c19'
+const SOFT = '#6c665d'
+const PAPER = '#fbf9f2'
 const SANS = '"Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif'
 const MONO = '"IBM Plex Mono", ui-monospace, Menlo, monospace'
 const BRAND = '"ZCOOL QingKe HuangYou", "Noto Sans SC", sans-serif'
@@ -47,7 +48,6 @@ function font(o: TextOpts) {
   return `${o.weight ?? 400} ${o.size ?? 18}px ${o.family ?? SANS}`
 }
 
-// 中文逐字换行；英文和数字尽量不拆开
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number): string[] {
   const out: string[] = []
   let line = ''
@@ -81,7 +81,7 @@ class Layout {
 
   text(str: string, o: TextOpts = {}) {
     const size = o.size ?? 18
-    const lineH = o.lineH ?? Math.round(size * 1.45)
+    const lineH = o.lineH ?? Math.round(size * 1.48)
     const maxW = o.maxW ?? W - PAD * 2
     this.m.font = font(o)
     const lines = wrap(this.m, str, maxW)
@@ -101,16 +101,16 @@ class Layout {
     return lines.length
   }
 
-  // 左边可换行的文字 + 右边对齐的金额
   row(left: string, right: string, lo: TextOpts = {}, ro: TextOpts = {}) {
-    this.m.font = font({ family: MONO, weight: 700, size: 20, ...ro })
+    this.m.font = font({ family: MONO, weight: 700, size: 19, ...ro })
     const rw = this.m.measureText(right).width
     const top = this.y
-    const rsize = ro.size ?? 20
+    const rsize = ro.size ?? 19
     this.ops.push((ctx) => {
-      ctx.font = font({ family: MONO, weight: 700, size: 20, ...ro })
+      ctx.font = font({ family: MONO, weight: 700, size: 19, ...ro })
       ctx.fillStyle = ro.color ?? INK
       ctx.textAlign = 'right'
+      ctx.textBaseline = 'alphabetic'
       ctx.fillText(right, W - PAD, top + Math.max(rsize, lo.size ?? 18))
     })
     this.text(left, { ...lo, maxW: W - PAD * 2 - rw - 16 })
@@ -120,8 +120,8 @@ class Layout {
     const y = this.y + 10
     this.ops.push((ctx) => {
       ctx.strokeStyle = INK
-      ctx.lineWidth = 1.6
-      ctx.setLineDash(style === 'dash' ? [7, 6] : [])
+      ctx.lineWidth = 1.5
+      ctx.setLineDash(style === 'dash' ? [6, 6] : [])
       ctx.beginPath()
       ctx.moveTo(PAD, y)
       ctx.lineTo(W - PAD, y)
@@ -163,146 +163,155 @@ function rng(seed: number) {
   }
 }
 
-function fmtTime(iso: string) {
+function fmtDate(iso: string) {
   const d = new Date(iso)
   const p = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`
 }
 
-function firstEvent(card: Card, evMap: Record<string, VerifyEvent>) {
-  return card.event_keys
-    .map((k) => evMap[k])
-    .filter(Boolean)
-    .sort((a, b) => a.sort - b.sort)[0]
+function stanceLabel(dishes: Card[]): string {
+  const counts = new Map<string, number>()
+  for (const d of dishes) {
+    const t = topicOf(d)
+    counts.set(t, (counts.get(t) ?? 0) + 1)
+  }
+  const top = Array.from(counts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] ?? ''
+  if (top.includes('基本面') || top.includes('财报')) return '基本面派'
+  if (top.includes('宏观')) return '宏观顺风派'
+  if (top.includes('历史')) return '长期主义派'
+  if (top.includes('大佬')) return '老炮经验派'
+  return '多元观察派'
 }
 
 function build(m: CanvasRenderingContext2D, input: ReceiptInput) {
-  const { order, dishes, sides, events, deckTitle, table } = input
+  const { order, dishes, sides, events, table } = input
   const evMap = Object.fromEntries(events.map((e) => [e.key, e]))
   const L = new Layout(m)
 
-  L.gap(30)
-  // 标志：热气小碗
+  L.gap(32)
+  // 极简港式招牌灯箱 + K 线碗单色热敏线稿
   L.custom(64, (ctx, top) => {
     const cx = W / 2
     ctx.save()
-    ctx.translate(cx - 32, top + 4)
+    ctx.translate(cx - 28, top + 2)
     ctx.strokeStyle = INK
-    ctx.lineWidth = 4
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
-    // 三缕热气
-    for (const sx of [20, 32, 44]) {
-      ctx.beginPath()
-      ctx.moveTo(sx, 14)
-      ctx.quadraticCurveTo(sx - 4, 8, sx + 2, 2)
-      ctx.stroke()
-    }
-    // 碗身
+    // 招牌圆角框
+    ctx.lineWidth = 2.6
     ctx.beginPath()
-    ctx.moveTo(8, 22)
-    ctx.lineTo(56, 22)
-    ctx.arc(32, 22, 24, 0, Math.PI, false)
+    ctx.roundRect(2, 2, 52, 52, 11)
+    ctx.stroke()
+    // 上冲 K 线
+    ctx.lineWidth = 2.8
+    ctx.beginPath()
+    ctx.moveTo(15, 25)
+    ctx.lineTo(22, 19)
+    ctx.lineTo(27, 23)
+    ctx.lineTo(39, 12)
+    ctx.moveTo(33, 12)
+    ctx.lineTo(39, 12)
+    ctx.lineTo(39, 18)
+    ctx.stroke()
+    // 汤碗
+    ctx.beginPath()
+    ctx.moveTo(12, 30)
+    ctx.lineTo(44, 30)
+    ctx.arc(28, 30, 16, 0, Math.PI, false)
     ctx.closePath()
     ctx.stroke()
     // 碗底
     ctx.beginPath()
-    ctx.moveTo(20, 52)
-    ctx.lineTo(44, 52)
+    ctx.moveTo(21, 49)
+    ctx.lineTo(35, 49)
     ctx.stroke()
     ctx.restore()
   })
-  L.text('美股信仰食堂', { family: BRAND, size: 48, align: 'center', lineH: 58 })
-  L.text('暖阳街角食堂 · 堂食小票', { size: 18, align: 'center', color: SOFT, lineH: 28 })
-  L.text('营业时间：美股开盘到比特币收盘，全年无休', { size: 14, align: 'center', color: SOFT })
+
+  L.text('美股信仰食堂', { family: BRAND, size: 46, align: 'center', lineH: 54 })
+  L.text('立场留存凭证 · 留作日后验真伪', { size: 16, align: 'center', color: SOFT, lineH: 26 })
   L.gap(6)
   L.dash()
 
-  L.row('单号', order.order_no, { size: 17, color: SOFT }, { size: 20 })
-  L.row('今日出单', `第 ${order.daily_seq} 单`, { size: 17, color: SOFT }, { size: 18, family: SANS })
-  L.row('桌号', table, { size: 17, color: SOFT }, { size: 20 })
-  L.row('下单时间', fmtTime(order.created_at), { size: 17, color: SOFT }, { size: 18 })
-  L.row('菜单', deckTitle.replace('的信仰牌组', ''), { size: 17, color: SOFT }, { size: 18, family: SANS, weight: 500 })
+  // 精简元信息：仅两行
+  L.row(fmtDate(order.created_at), `NO.${order.order_no}`, { family: MONO, size: 15, color: SOFT }, { family: MONO, size: 16, weight: 700 })
+  L.row(`桌号 ${table} · 第 ${order.daily_seq} 单`, stanceLabel(dishes), { size: 15, color: SOFT }, { family: SANS, size: 15, weight: 700 })
   L.dash()
 
-  L.row('品名', '信仰', { size: 15, color: SOFT, weight: 700 }, { size: 15, family: SANS, color: SOFT })
-  L.gap(4)
-  for (const d of dishes) {
-    L.row(d.title, `+${d.charge}`, { size: 19, weight: 700, lineH: 27 }, { size: 22 })
-    const ev = firstEvent(d, evMap)
-    if (ev) L.text(`取餐：${ev.when_label}，${ev.name}`, { size: 14, color: SOFT, lineH: 21, x: PAD + 14, maxW: W - PAD * 2 - 14 })
-    L.text(`出品：${d.source.name}`, { size: 14, color: SOFT, lineH: 21, x: PAD + 14, maxW: W - PAD * 2 - 14 })
-    L.gap(10)
-  }
+  // 我认同的核心观点
+  L.row('我今日认同的逻辑', '权重', { size: 14, color: SOFT, weight: 700 }, { size: 14, family: SANS, color: SOFT })
+  L.gap(6)
+  dishes.forEach((d, idx) => {
+    const num = String(idx + 1).padStart(2, '0')
+    L.row(`${num}  ${d.title}`, `+${d.charge}`, { size: 18, weight: 700, lineH: 26 }, { size: 20 })
+    L.gap(8)
+  })
 
+  // 附带风险提示（精简一行一条）
   if (sides.length) {
-    L.gap(2)
-    L.text('清醒小菜（赠送）', { size: 16, weight: 700, lineH: 26 })
+    L.gap(4)
+    L.text('同时记下的风险提示', { size: 14, weight: 700, color: SOFT, lineH: 24 })
     for (const s of sides) {
-      L.row(s.title, '0', { size: 17, lineH: 25 }, { size: 20 })
-      L.text(`出品：${s.source.name}`, { size: 14, color: SOFT, lineH: 21, x: PAD + 14, maxW: W - PAD * 2 - 14 })
-      L.gap(8)
+      L.text(`· ${s.title}`, { size: 15, color: SOFT, lineH: 22 })
+      L.gap(4)
     }
   }
-  L.dash()
 
-  L.row('菜品', `${dishes.length} 道主菜 + ${sides.length} 道小菜`, { size: 17, color: SOFT }, { size: 17, family: SANS, weight: 500 })
-  L.row('小计', `+${order.total}`, { size: 17, color: SOFT }, { size: 20 })
-  L.row('清醒小菜', '免费', { size: 17, color: SOFT }, { size: 17, family: SANS, weight: 500 })
   L.dash('double')
-  L.custom(62, (ctx, top) => {
-    const base = top + 48
+  L.custom(58, (ctx, top) => {
+    const base = top + 44
     ctx.textBaseline = 'alphabetic'
     ctx.fillStyle = INK
     ctx.textAlign = 'left'
-    ctx.font = font({ size: 26, weight: 900 })
-    ctx.fillText('合计充值', PAD, base)
+    ctx.font = font({ size: 24, weight: 900 })
+    ctx.fillText('合计信仰', PAD, base)
     ctx.textAlign = 'right'
     ctx.font = font({ size: 15, color: SOFT })
     ctx.fillStyle = SOFT
-    const unitW = ctx.measureText('点信仰').width
-    ctx.fillText('点信仰', W - PAD, base)
+    const unitW = ctx.measureText('点').width
+    ctx.fillText('点', W - PAD, base)
     ctx.fillStyle = INK
-    ctx.font = font({ family: MONO, size: 48, weight: 700 })
-    ctx.fillText(`+${order.total}`, W - PAD - unitW - 8, base)
+    ctx.font = font({ family: MONO, size: 44, weight: 700 })
+    ctx.fillText(`+${order.total}`, W - PAD - unitW - 6, base)
   })
   L.dash()
 
-  const evs = Array.from(new Map(dishes.flatMap((d) => d.event_keys.map((k) => evMap[k])).filter(Boolean).map((e) => [e.key, e])).values()).sort(
-    (a, b) => a.sort - b.sort
-  )
-  if (evs.length) {
-    L.text('取餐时间：到这天看信仰兑现没有', { size: 16, weight: 700, lineH: 28 })
-    for (const e of evs) {
-      L.row(e.name, e.short_label, { size: 15, lineH: 23 }, { size: 17 })
+  // 未来核对节点：只取最关键的 3 个，清晰不啰嗦
+  const linkedEvs = Array.from(
+    new Map(dishes.flatMap((d) => d.event_keys.map((k) => evMap[k])).filter(Boolean).map((e) => [e.key, e])).values()
+  ).sort((a, b) => a.sort - b.sort)
+  const datedEvs = linkedEvs.filter((e) => Boolean(e.happens_at)).slice(0, 3)
+  const pickEvs = datedEvs.length ? datedEvs : linkedEvs.slice(0, 2)
+
+  if (pickEvs.length) {
+    L.text('到期翻出此票核对', { size: 15, weight: 700, lineH: 26 })
+    for (const e of pickEvs) {
+      L.row(e.name, e.short_label, { size: 15, color: SOFT, lineH: 23 }, { size: 16, color: INK })
     }
     L.dash()
   }
 
-  // 条形码（装饰）
-  L.gap(6)
-  L.custom(78, (ctx, top) => {
+  // 简洁条形码
+  L.gap(4)
+  L.custom(64, (ctx, top) => {
     const rand = rng(hash(order.order_no))
-    const total = 380
+    const total = 340
     let x = (W - total) / 2
     ctx.fillStyle = INK
     while (x < (W + total) / 2) {
       const bw = 1.5 + Math.floor(rand() * 3) * 1.5
-      if (rand() > 0.35) ctx.fillRect(x, top, bw, 60)
+      if (rand() > 0.35) ctx.fillRect(x, top, bw, 46)
       x += bw + 1.5 + Math.floor(rand() * 2) * 1.5
     }
-    ctx.font = font({ family: MONO, size: 15, weight: 500 })
+    ctx.font = font({ family: MONO, size: 13, weight: 500 })
     ctx.textAlign = 'center'
-    ctx.fillText(`*FR${order.order_no.replace(/-/g, '')}*`, W / 2, top + 78)
+    ctx.fillText(`*FR${order.order_no.replace(/-/g, '')}*`, W / 2, top + 62)
   })
-  L.gap(16)
+  L.gap(14)
 
-  for (const ln of ['信仰一经点单，记得拿稳别慌', '每道菜的作废条件写在背面，到期按规则验菜', '数据结合 FMP 官方财报与公开观点，不构成投资建议']) {
-    L.text(ln, { size: 14, align: 'center', color: SOFT, lineH: 22 })
-  }
-  L.gap(10)
-  L.text('慢慢吃，跌了随时再来', { size: 22, weight: 900, align: 'center', lineH: 32 })
-  L.gap(30)
+  L.text('保存到本地留作凭证，时间会给出答案', { size: 16, weight: 700, align: 'center', lineH: 24 })
+  L.text('公开数据与观点整理，不构成投资建议', { size: 13, align: 'center', color: SOFT, lineH: 22 })
+  L.gap(26)
   return L
 }
 
@@ -322,13 +331,13 @@ async function loadFonts(text: string) {
 
 export async function drawReceipt(input: ReceiptInput, scale = 2): Promise<HTMLCanvasElement> {
   const allText = [
-    '美股信仰食堂暖阳街角堂食小票营业时间开盘到比特币收盘全年无休单号今日出单第桌号下单菜单品名取餐出品清醒避坑小菜赠送主菜道小计免费合计充值点到这天看兑现没有一经记得拿稳别慌每作废条件写在背面期按规则验菜数据结合官方财报与公开观点不构成投资建议慢慢吃跌了随时再来',
+    '美股信仰食堂立场留存凭证留作日后验真伪桌号第单基本面宏观顺风长期主义老炮经验多元观察派我今日认同的逻辑权重同时记下的风险提示合计点到期翻出此票核对保存到本地时间会给出答案公开数据与观点整理不构成投资建议',
     input.deckTitle,
-    ...input.dishes.flatMap((d) => [d.title, d.source.name]),
-    ...input.sides.flatMap((d) => [d.title, d.source.name]),
-    ...input.events.flatMap((e) => [e.name, e.when_label])
+    ...input.dishes.map((d) => d.title),
+    ...input.sides.map((d) => d.title),
+    ...input.events.flatMap((e) => [e.name, e.short_label])
   ].join('')
-  await loadFonts(allText + '0123456789+-*:FR')
+  await loadFonts(allText + '0123456789+-*:FRNO.')
 
   const probe = document.createElement('canvas').getContext('2d')
   if (!probe) throw new Error('浏览器不支持画布')
@@ -343,7 +352,7 @@ export async function drawReceipt(input: ReceiptInput, scale = 2): Promise<HTMLC
   if (!ctx) throw new Error('浏览器不支持画布')
   ctx.scale(scale, scale)
 
-  // 纸张，底边是撕纸锯齿
+  // 纸张与底边撕纸锯齿
   ctx.beginPath()
   ctx.moveTo(0, 0)
   ctx.lineTo(W, 0)
@@ -359,8 +368,8 @@ export async function drawReceipt(input: ReceiptInput, scale = 2): Promise<HTMLC
   ctx.save()
   ctx.clip()
   const rand = rng(hash(input.order.order_no) ^ 0x9e37)
-  for (let i = 0; i < 2600; i++) {
-    ctx.fillStyle = `rgba(80,60,30,${rand() * 0.06})`
+  for (let i = 0; i < 2000; i++) {
+    ctx.fillStyle = `rgba(80,60,30,${rand() * 0.05})`
     ctx.fillRect(rand() * W, rand() * H, 1.2, 1.2)
   }
   for (const op of layout.ops) op(ctx)
@@ -369,7 +378,7 @@ export async function drawReceipt(input: ReceiptInput, scale = 2): Promise<HTMLC
 }
 
 export function receiptFileName(order: OrderResult, ext: 'png' | 'pdf') {
-  return `信仰小票-${order.order_no}.${ext}`
+  return `立场凭证-${order.order_no}.${ext}`
 }
 
 export async function saveReceiptPng(canvas: HTMLCanvasElement, order: OrderResult) {

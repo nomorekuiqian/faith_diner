@@ -1,17 +1,22 @@
 import type { Metadata, Viewport } from 'next'
 import Header from '@/components/Header'
-import EnergyField from '@/components/fx/EnergyField'
 import './globals.css'
+import '../styles/tokens.css'
+import '../styles/ds.css'
+import '../styles/home.css'
+import '../styles/menu.css'
+import '../styles/events.css'
 
 export const metadata: Metadata = {
-  title: '美股信仰食堂 · 大跌之后不要慌',
-  description: '大跌之后不要慌，来信仰食堂充值一些信仰吧。看清市场上的信仰与风险提示，选你信的打张小票。'
+  title: '美股信仰食堂',
+  description: '大跌之后不要慌，来信仰食堂点两道菜压压惊：看清市场上的信仰与风险提示，选你信的打张小票。'
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  viewportFit: 'cover'
+  viewportFit: 'cover',
+  themeColor: '#14533c'
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -23,16 +28,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+QingKe+HuangYou&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=IBM+Plex+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+QingKe+HuangYou&display=swap"
         />
       </head>
       <body>
-        <EnergyField />
-        <div className="shell">
-          <Header />
-          {children}
-          <div className="foot">美股信仰食堂 · 结合 FMP 官方宏观财报数据与公开观点整理，历史对照为近似值，不构成任何投资建议。</div>
-        </div>
+        <Header />
+        <div className="shell">{children}</div>
+        <footer className="ds-foot ds-container">内容摘自公开数据和观点，历史对照为近似值，不构成投资建议。</footer>
       </body>
     </html>
   )

@@ -9,7 +9,7 @@ export default function SoundToggle() {
   return (
     <button
       type="button"
-      className={`sound${on ? ' on' : ''}`}
+      className="ds-icon-btn"
       aria-pressed={on}
       aria-label={on ? '关闭音效' : '打开音效'}
       title={on ? '关闭音效' : '打开音效'}
@@ -29,7 +29,6 @@ export default function SoundToggle() {
           <path d="M16 9.5l5 5M21 9.5l-5 5" />
         )}
       </svg>
-      <span>{on ? '音效开' : '音效关'}</span>
     </button>
   )
 }

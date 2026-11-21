@@ -1,0 +1,74 @@
+/* 美股信仰食堂设计系统：方案 A 茶餐厅
+   只做一套浅色外观（茶餐厅白天的样子），所有组件只从这里取值。
+   颜色分工：红 = 价钱和主操作；绿 = 结构和清醒凉菜；黄 = 推荐和合计；墨黑 = 文字；烟灰 = 次要文字。 */
+:root {
+  /* 颜色 */
+  --ds-tile: #ffffff;
+  --ds-tile-line: #e3ebe7;
+  --ds-paper: #ffffff;
+  --ds-mist: #f3f6f5;
+  --ds-jade: #1f7a5a;
+  --ds-jade-deep: #14533c;
+  --ds-jade-sign: #114734;
+  --ds-jade-soft: #e3f1ea;
+  --ds-red: #d63a2a;
+  --ds-red-deep: #a12719;
+  --ds-red-soft: #fde7e3;
+  --ds-yolk: #f5c12e;
+  --ds-yolk-soft: #fff4cc;
+  --ds-yolk-glow: rgba(245, 193, 46, .34);
+  --ds-cream: #fffdf7;
+  --ds-ink: #1c1d1f;
+  --ds-smoke: #686c70;
+  --ds-line: #dde4e1;
+  --ds-chalk: #24302b;
+  --ds-chalk-ink: #f4f1e8;
+
+  /* 字体：招牌用站酷庆科黄油体（港式冰室招牌感）；正文思源黑体；数字 Big Shoulders；小票和副标等宽体 */
+  --ds-font-sign: "ZCOOL QingKe HuangYou", "Noto Sans SC", "PingFang SC", sans-serif;
+  --ds-font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --ds-font-num: "Big Shoulders Display", "Noto Sans SC", sans-serif;
+  --ds-font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* 字号阶梯 */
+  --ds-fs-12: 12px;
+  --ds-fs-14: 14px;
+  --ds-fs-16: 16px;
+  --ds-fs-18: 18px;
+  --ds-fs-24: 24px;
+  --ds-fs-32: 32px;
+  --ds-fs-48: 48px;
+
+  /* 间距（4 的倍数） */
+  --ds-sp-1: 4px;
+  --ds-sp-2: 8px;
+  --ds-sp-3: 12px;
+  --ds-sp-4: 16px;
+  --ds-sp-6: 24px;
+  --ds-sp-8: 32px;
+  --ds-sp-12: 48px;
+
+  /* 圆角只有三档 */
+  --ds-r-sm: 4px;
+  --ds-r-md: 8px;
+  --ds-r-pill: 999px;
+
+  /* 阴影只有两档：餐牌的实心底影、弹层 */
+  --ds-shadow-board: 0 3px 0 var(--ds-jade);
+  --ds-shadow-pop: 0 18px 44px -18px rgba(20, 40, 30, .38);
+
+  /* 动效（加权减速曲线） */
+  --ds-fast: 180ms;
+  --ds-med: 300ms;
+  --ds-slow: 480ms;
+  --ds-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* 版式 */
+  --ds-max: 1120px;
+  --ds-gutter: max(16px, env(safe-area-inset-left, 0px));
+  --ds-gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --ds-header-h: 68px;
+  --ds-orderbar-h: 64px;
+
+  color-scheme: light;
+}
